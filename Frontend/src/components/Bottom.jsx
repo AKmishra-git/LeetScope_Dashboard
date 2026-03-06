@@ -3,21 +3,38 @@ import React, { useState } from "react";
 const Bottom = (props) => {
   const [active, setActive] = useState(null);
 
+  // Safe user reference
+  const user = props.user || {};
+
   const now = Math.floor(Date.now() / 1000);
   const todayKey = Math.floor(now / 86400) * 86400;
 
-  const calendar = props.user.submissionCalendar || {};
+  const calendar = user.submissionCalendar || {};
 
   const solvedToday = calendar[todayKey] || 0;
 
-  let past6Days = 0;
-  for (let i = 1; i <= 6; i++) {
-    const day = todayKey - i * 86400;
-    past6Days += calendar[day] || 0;
-  }
+  // ---------- BURNOUT INDEX ----------
+  const last30 = Array.from({ length: 30 }, (_, i) => {
+    const day = Math.floor((now - i * 86400) / 86400) * 86400;
+    return calendar[day] || 0;
+  }).reduce((a, b) => a + b, 0);
 
-  const points = props.user.contributionPoints;
-  const reputation = props.user.reputation;
+  const prev30 = Array.from({ length: 30 }, (_, i) => {
+    const day = Math.floor((now - (i + 30) * 86400) / 86400) * 86400;
+    return calendar[day] || 0;
+  }).reduce((a, b) => a + b, 0);
+
+  const burnoutDiff = Math.abs(last30 - prev30);
+  const isRamping = last30 >= prev30;
+  const burnoutTrend = isRamping ? "Ramping Up 🔥" : "Cooling Down ❄️";
+  const burnoutColor = isRamping ? "text-emerald-400" : "text-blue-400";
+
+  const burnoutSubtext =
+    last30 === prev30
+      ? "Same pace as the previous 30 days"
+      : isRamping
+      ? `+${burnoutDiff} more submissions than previous 30 days`
+      : `${burnoutDiff} fewer submissions than previous 30 days`;
 
   return (
     <>
@@ -27,7 +44,7 @@ const Bottom = (props) => {
         bg-[radial-gradient(800px_circle_at_20%_20%,rgba(0,255,200,0.08),transparent_40%),radial-gradient(600px_circle_at_80%_0%,rgba(0,100,255,0.08),transparent_35%),linear-gradient(180deg,#0b0f14,#121826)]
         border border-white/10"
       >
-        {/* Today */}
+        {/* Today's Submissions */}
         <div
           onClick={() => setActive("today")}
           className="w-[46%] h-full cursor-pointer 
@@ -35,7 +52,7 @@ const Bottom = (props) => {
           rounded-2xl border border-white/10 
           py-6 px-6
           shadow-[0_8px_30px_rgba(0,0,0,0.6)]
-          flex flex-col transition-all duration-300 hover:scale-[1.03] cursor-pointer"
+          flex flex-col transition-all duration-300 hover:scale-[1.03]"
         >
           <p className="text-xl uppercase tracking-widest text-white">
             Today's Submissions
@@ -59,9 +76,9 @@ const Bottom = (props) => {
           </div>
         </div>
 
-        {/* Community */}
+        {/* Burnout Index */}
         <div
-          onClick={() => setActive("community")}
+          onClick={() => setActive("burnout")}
           className="w-[46%] h-full cursor-pointer 
           bg-[#0f172a]/75 backdrop-blur-md 
           rounded-2xl border border-white/10 
@@ -70,18 +87,27 @@ const Bottom = (props) => {
           flex flex-col transition-all duration-300 hover:scale-[1.03]"
         >
           <p className="text-xl uppercase tracking-widest text-white">
-            Total Points
+            Burnout Index
           </p>
 
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <h1 className="flex items-end gap-2">
-              <span className="text-[150px] leading-none font-semibold text-emerald-400">
-                {points}
-              </span>
-              <span className="text-4xl text-gray-400 lowercase mb-2">
-                points
-              </span>
+          <div className="flex flex-1 flex-col items-center justify-center text-center">
+            <h1 className={`text-4xl font-semibold ${burnoutColor}`}>
+              {burnoutTrend}
             </h1>
+            <p className="mt-6 text-sm text-gray-400">
+              {burnoutSubtext}
+            </p>
+            <div className="mt-6 flex gap-6 text-sm">
+              <div className="flex flex-col items-center">
+                <span className="text-white/50 mb-1">Last 30 days</span>
+                <span className="text-2xl font-semibold text-white">{last30}</span>
+              </div>
+              <div className="w-px bg-white/10" />
+              <div className="flex flex-col items-center">
+                <span className="text-white/50 mb-1">Prev 30 days</span>
+                <span className="text-2xl font-semibold text-white">{prev30}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -104,30 +130,41 @@ const Bottom = (props) => {
                 <p className="text-2xl text-white uppercase tracking-widest mb-6">
                   Today's Submissions
                 </p>
-
                 <h1 className="text-[120px] text-emerald-400 font-semibold">
                   {solvedToday}
                 </h1>
-
                 <p className="text-gray-400 text-lg mt-4">
                   AC submissions made today
                 </p>
               </>
             )}
 
-            {active === "community" && (
+            {active === "burnout" && (
               <>
                 <p className="text-2xl text-white uppercase tracking-widest mb-6">
-                  Contribution Points
+                  Burnout Index
                 </p>
-
-                <h1 className="text-[90px] text-emerald-400 font-semibold">
-                  {points} Points
+                <h1 className={`text-[60px] font-semibold ${burnoutColor}`}>
+                  {burnoutTrend}
                 </h1>
-
-                <p className="text-gray-400 text-xl mt-4">
-                  Reputation: {reputation}
-                </p>
+                <div className="mt-8 flex gap-10">
+                  <div className="flex flex-col">
+                    <span className="text-gray-400 text-lg">Last 30 days</span>
+                    <span className="text-5xl font-semibold text-white mt-2">
+                      {last30}
+                    </span>
+                    <span className="text-gray-500 text-sm mt-1">submissions</span>
+                  </div>
+                  <div className="w-px bg-white/10" />
+                  <div className="flex flex-col">
+                    <span className="text-gray-400 text-lg">Previous 30 days</span>
+                    <span className="text-5xl font-semibold text-white mt-2">
+                      {prev30}
+                    </span>
+                    <span className="text-gray-500 text-sm mt-1">submissions</span>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-lg mt-8">{burnoutSubtext}</p>
               </>
             )}
           </div>

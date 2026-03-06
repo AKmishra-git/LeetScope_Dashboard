@@ -3,15 +3,21 @@ import React from "react";
 const Section = (props) => {
   const TOTAL_USERS = 25000000;
 
-  const percentile = ((1 - props.user.ranking / TOTAL_USERS) * 100).toFixed(2);
+  // ---------- SAFE USER ----------
+  const user = props.user ?? {};
 
-  // -------- Max streak --------
-  const days = Object.keys(props.user.submissionCalendar || {})
-    .map((ts) => Number(ts))
+  // ---------- GLOBAL PERCENTILE ----------
+  const ranking = Number(user.ranking);
+  const percentile = Number.isFinite(ranking)
+    ? (1 - ranking / TOTAL_USERS) * 100
+    : 0;
+
+  // ---------- MAX STREAK ----------
+  const calendar = user.submissionCalendar ?? {};
+
+  const days = Object.keys(calendar)
+    .map(Number)
     .sort((a, b) => a - b);
-
-  const totalSubmissions = Object.values(props.user.submissionCalendar || {})
-    .reduce((sum, v) => sum + v, 0);
 
   const ONE_DAY = 86400;
   let maxStreak = 0;
@@ -26,10 +32,37 @@ const Section = (props) => {
     maxStreak = Math.max(maxStreak, currentStreak);
   }
 
-  // -------- Difficulty % --------
-  const easyPct = (props.user.easySolved / props.user.totalEasy) * 100;
-  const mediumPct = (props.user.mediumSolved / props.user.totalMedium) * 100;
-  const hardPct = (props.user.hardSolved / props.user.totalHard) * 100;
+  // ---------- SAFE HELPERS ----------
+  const safeNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  const safePct = (solved, total) =>
+    total > 0 ? Math.min((solved / total) * 100, 100) : 0;
+
+  // ---------- DIFFICULTY ----------
+  const easySolved = safeNum(user.easySolved);
+  const totalEasy = safeNum(user.totalEasy);
+  const mediumSolved = safeNum(user.mediumSolved);
+  const totalMedium = safeNum(user.totalMedium);
+  const hardSolved = safeNum(user.hardSolved);
+  const totalHard = safeNum(user.totalHard);
+
+  const easyPct = safePct(easySolved, totalEasy);
+  const mediumPct = safePct(mediumSolved, totalMedium);
+  const hardPct = safePct(hardSolved, totalHard);
+
+  // ---------- CONSISTENCY SCORE ----------
+  const totalDaysActive = Object.keys(calendar).filter(
+    (k) => Number(calendar[k]) > 0
+  ).length;
+
+  const firstDay = days.length > 0 ? days[0] : null;
+  const now = Math.floor(Date.now() / 1000);
+  const totalDaysSinceStart = firstDay
+    ? Math.max(1, Math.floor((now - firstDay) / ONE_DAY))
+    : 365;
+
+  const consistencyScore = (
+    (totalDaysActive / totalDaysSinceStart) * 100
+  ).toFixed(1);
 
   return (
     <div
@@ -40,7 +73,8 @@ const Section = (props) => {
       shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_0_60px_rgba(0,255,200,0.08),0_0_120px_rgba(0,100,255,0.06)]"
     >
       {/* Row 1 */}
-      <div className="h-[48%] w-full p-3 flex justify-around cursor-pointer">
+      <div className="h-[48%] w-full p-3 flex justify-around">
+
         {/* Global Percentile */}
         <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between hover:scale-[1.05] transition">
           <h1 className="text-xl uppercase tracking-widest text-white">
@@ -51,33 +85,34 @@ const Section = (props) => {
               Top {(100 - percentile).toFixed(2)}%
             </h1>
             <p className="mt-2 text-sm text-gray-400">
-              Better than {percentile}% of users
+              Better than {percentile.toFixed(2)}% of users
             </p>
           </div>
         </div>
 
-        {/* Clean Solve Rate */}
+        {/* Consistency Score */}
         <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between hover:scale-[1.05] transition">
           <h1 className="text-xl uppercase tracking-widest text-white">
-            Clean Solve Rate
+            Consistency Score
           </h1>
           <div>
             <h1 className="text-5xl font-semibold text-green-400">
-             {((props.user.totalSolved / totalSubmissions) * 100).toFixed(2)}%
-
+              {consistencyScore}%
             </h1>
             <p className="mt-2 text-sm text-gray-400">
-              Based on all submissions
+              Active {totalDaysActive} out of {totalDaysSinceStart} days since joining
             </p>
           </div>
         </div>
+
       </div>
 
       {/* Row 2 */}
-      <div className="h-[48%] w-full p-3 flex justify-around cursor-pointer">
+      <div className="h-[48%] w-full p-3 flex justify-around">
+
         {/* Max Streak */}
         <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between relative hover:scale-[1.05] transition">
-          <p className="text-lg uppercase tracking-widest text-white ">
+          <p className="text-lg uppercase tracking-widest text-white">
             Max Streak
           </p>
           <div>
@@ -85,7 +120,9 @@ const Section = (props) => {
               <span className="text-6xl font-semibold text-white">
                 {maxStreak}
               </span>
-              <span className="text-lg text-green-400 lowercase">days</span>
+              <span className="text-lg text-green-400 lowercase">
+                days
+              </span>
             </h1>
             <p className="mt-2 text-sm text-gray-400">
               Longest consecutive solving streak
@@ -109,7 +146,7 @@ const Section = (props) => {
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-emerald-400">Easy</span>
                 <span className="text-white">
-                  {props.user.easySolved} / {props.user.totalEasy}
+                  {easySolved} / {totalEasy}
                 </span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
@@ -125,7 +162,7 @@ const Section = (props) => {
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-yellow-400">Medium</span>
                 <span className="text-white">
-                  {props.user.mediumSolved} / {props.user.totalMedium}
+                  {mediumSolved} / {totalMedium}
                 </span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
@@ -141,7 +178,7 @@ const Section = (props) => {
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-red-400">Hard</span>
                 <span className="text-white">
-                  {props.user.hardSolved} / {props.user.totalHard}
+                  {hardSolved} / {totalHard}
                 </span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
@@ -157,6 +194,7 @@ const Section = (props) => {
             Your progress across all LeetCode difficulties
           </p>
         </div>
+
       </div>
     </div>
   );
