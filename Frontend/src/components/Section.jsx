@@ -3,7 +3,6 @@ import React from "react";
 const Section = (props) => {
   const TOTAL_USERS = 25000000;
 
-  // ---------- SAFE USER ----------
   const user = props.user ?? {};
 
   // ---------- GLOBAL PERCENTILE ----------
@@ -66,41 +65,41 @@ const Section = (props) => {
 
   return (
     <div
-      className="h-[550px] w-full mt-4 rounded-xl px-5 py-2
-      flex flex-col justify-center gap-6
+      className="w-full mt-4 rounded-xl px-3 md:px-5 py-4
+      flex flex-col gap-4
       bg-[#0b0f14]
       border border-white/10
       shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_0_60px_rgba(0,255,200,0.08),0_0_120px_rgba(0,100,255,0.06)]"
     >
       {/* Row 1 */}
-      <div className="h-[48%] w-full p-3 flex justify-around">
+      <div className="w-full flex flex-col sm:flex-row gap-4">
 
         {/* Global Percentile */}
-        <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between hover:scale-[1.05] transition">
-          <h1 className="text-xl uppercase tracking-widest text-white">
+        <div className="flex-1 bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-4 md:px-5 py-5 md:py-6 flex flex-col justify-between hover:scale-[1.02] transition min-h-[140px]">
+          <h1 className="text-sm md:text-xl uppercase tracking-widest text-white">
             Global Percentile
           </h1>
           <div>
-            <h1 className="text-5xl font-semibold text-white">
+            <h1 className="text-3xl md:text-5xl font-semibold text-white">
               Top {(100 - percentile).toFixed(2)}%
             </h1>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-xs md:text-sm text-gray-400">
               Better than {percentile.toFixed(2)}% of users
             </p>
           </div>
         </div>
 
         {/* Consistency Score */}
-        <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between hover:scale-[1.05] transition">
-          <h1 className="text-xl uppercase tracking-widest text-white">
+        <div className="flex-1 bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-4 md:px-5 py-5 md:py-6 flex flex-col justify-between hover:scale-[1.02] transition min-h-[140px]">
+          <h1 className="text-sm md:text-xl uppercase tracking-widest text-white">
             Consistency Score
           </h1>
           <div>
-            <h1 className="text-5xl font-semibold text-green-400">
+            <h1 className="text-3xl md:text-5xl font-semibold text-green-400">
               {consistencyScore}%
             </h1>
-            <p className="mt-2 text-sm text-gray-400">
-              Active {totalDaysActive} out of {totalDaysSinceStart} days since joining
+            <p className="mt-2 text-xs md:text-sm text-gray-400">
+              Active {totalDaysActive} of {totalDaysSinceStart} days since joining
             </p>
           </div>
         </div>
@@ -108,89 +107,74 @@ const Section = (props) => {
       </div>
 
       {/* Row 2 */}
-      <div className="h-[48%] w-full p-3 flex justify-around">
+      <div className="w-full flex flex-col sm:flex-row gap-4">
 
         {/* Max Streak */}
-        <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between relative hover:scale-[1.05] transition">
-          <p className="text-lg uppercase tracking-widest text-white">
+        <div className="flex-1 bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-4 md:px-5 py-5 md:py-6 flex flex-col justify-between relative hover:scale-[1.02] transition min-h-[160px]">
+          <p className="text-sm md:text-lg uppercase tracking-widest text-white">
             Max Streak
           </p>
           <div>
             <h1 className="flex items-end gap-2">
-              <span className="text-6xl font-semibold text-white">
+              <span className="text-5xl md:text-6xl font-semibold text-white">
                 {maxStreak}
               </span>
-              <span className="text-lg text-green-400 lowercase">
+              <span className="text-base md:text-lg text-green-400 lowercase mb-1">
                 days
               </span>
             </h1>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-xs md:text-sm text-gray-400">
               Longest consecutive solving streak
             </p>
           </div>
 
-          <div className="absolute top-5 right-5 w-20 h-20 bg-orange-500/10 border border-orange-500/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-            <i className="ri-fire-line text-orange-400 text-[56px]"></i>
+          <div className="absolute top-4 right-4 w-14 h-14 md:w-20 md:h-20 bg-orange-500/10 border border-orange-500/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+            <i className="ri-fire-line text-orange-400 text-[36px] md:text-[56px]"></i>
           </div>
         </div>
 
         {/* Difficulty Breakdown */}
-        <div className="w-[48%] h-full bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-5 py-6 flex flex-col justify-between hover:scale-[1.05] transition">
-          <p className="text-lg uppercase tracking-widest text-white">
+        <div className="flex-1 bg-[#0f172a]/75 backdrop-blur-md rounded-xl border border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] px-4 md:px-5 py-5 md:py-6 flex flex-col justify-between hover:scale-[1.02] transition min-h-[160px]">
+          <p className="text-sm md:text-lg uppercase tracking-widest text-white">
             Difficulty Breakdown
           </p>
 
-          <div className="flex flex-col gap-4 mt-2">
+          <div className="flex flex-col gap-3 md:gap-4 mt-2">
             {/* Easy */}
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-xs md:text-sm mb-1">
                 <span className="text-emerald-400">Easy</span>
-                <span className="text-white">
-                  {easySolved} / {totalEasy}
-                </span>
+                <span className="text-white">{easySolved} / {totalEasy}</span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
-                <div
-                  className="h-2 bg-emerald-400 rounded"
-                  style={{ width: `${easyPct}%` }}
-                />
+                <div className="h-2 bg-emerald-400 rounded" style={{ width: `${easyPct}%` }} />
               </div>
             </div>
 
             {/* Medium */}
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-xs md:text-sm mb-1">
                 <span className="text-yellow-400">Medium</span>
-                <span className="text-white">
-                  {mediumSolved} / {totalMedium}
-                </span>
+                <span className="text-white">{mediumSolved} / {totalMedium}</span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
-                <div
-                  className="h-2 bg-yellow-400 rounded"
-                  style={{ width: `${mediumPct}%` }}
-                />
+                <div className="h-2 bg-yellow-400 rounded" style={{ width: `${mediumPct}%` }} />
               </div>
             </div>
 
             {/* Hard */}
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-xs md:text-sm mb-1">
                 <span className="text-red-400">Hard</span>
-                <span className="text-white">
-                  {hardSolved} / {totalHard}
-                </span>
+                <span className="text-white">{hardSolved} / {totalHard}</span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded">
-                <div
-                  className="h-2 bg-red-400 rounded"
-                  style={{ width: `${hardPct}%` }}
-                />
+                <div className="h-2 bg-red-400 rounded" style={{ width: `${hardPct}%` }} />
               </div>
             </div>
           </div>
 
-          <p className="text-sm text-gray-400 mt-4">
+          <p className="text-xs md:text-sm text-gray-400 mt-3">
             Your progress across all LeetCode difficulties
           </p>
         </div>

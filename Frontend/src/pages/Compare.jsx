@@ -42,7 +42,7 @@ const getBalanceScore = (easy, medium, hard) => {
    UI Components
 ======================= */
 const StatRow = ({ label, v1, v2 }) => (
-  <div className="grid grid-cols-3 py-3 border-b border-white/10 text-sm">
+  <div className="grid grid-cols-3 py-3 border-b border-white/10 text-xs md:text-sm">
     <span className="text-white/70">{label}</span>
     <span className="text-center">{v1}</span>
     <span className="text-center">{v2}</span>
@@ -52,7 +52,7 @@ const StatRow = ({ label, v1, v2 }) => (
 const Insight = ({ label, diff, name1, name2 }) => {
   const value = Math.abs(diff);
   return (
-    <li className="list-disc ml-5 text-white/80">
+    <li className="list-disc ml-5 text-white/80 text-sm md:text-base">
       {diff === 0
         ? `${name1} and ${name2} are equal in ${label}`
         : diff > 0
@@ -125,15 +125,15 @@ const Compare = () => {
   ======================= */
   if (!user1 || !user2) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black text-white px-6 py-14">
-        <h1 className="text-4xl font-semibold text-center mb-12">
+      <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black text-white px-4 md:px-6 py-10 md:py-14">
+        <h1 className="text-2xl md:text-4xl font-semibold text-center mb-8 md:mb-12">
           Compare LeetCode Profiles
         </h1>
 
-        <div className="flex flex-col md:flex-row justify-center gap-6 mb-6">
+        <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mb-6">
           <input
             placeholder="First username"
-            className="bg-black/40 border border-white/10 rounded-xl px-5 py-3 w-full md:w-80 text-white outline-none focus:border-emerald-400/40"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 md:px-5 py-3 w-full md:w-80 text-white outline-none focus:border-emerald-400/40"
             value={u1}
             onChange={(e) => setU1(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && fetchUsers()}
@@ -141,7 +141,7 @@ const Compare = () => {
           />
           <input
             placeholder="Second username"
-            className="bg-black/40 border border-white/10 rounded-xl px-5 py-3 w-full md:w-80 text-white outline-none focus:border-emerald-400/40"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 md:px-5 py-3 w-full md:w-80 text-white outline-none focus:border-emerald-400/40"
             value={u2}
             onChange={(e) => setU2(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && fetchUsers()}
@@ -153,7 +153,7 @@ const Compare = () => {
           <button
             onClick={fetchUsers}
             disabled={loading}
-            className={`px-10 py-3 rounded-xl transition text-white
+            className={`px-8 md:px-10 py-3 rounded-xl transition text-white
               ${loading ? "bg-white/5 cursor-not-allowed" : "bg-white/10 hover:bg-white/20"}`}
           >
             {loading ? "Comparing..." : "Compare"}
@@ -162,20 +162,20 @@ const Compare = () => {
           <button
             onClick={handleReload}
             disabled={loading}
-            className="px-8 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition"
+            className="px-6 md:px-8 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition"
           >
             Reload
           </button>
         </div>
 
         {loading && (
-          <p className="text-center text-white/60 mt-6">
+          <p className="text-center text-white/60 mt-6 text-sm md:text-base">
             Fetching profile data, please wait...
           </p>
         )}
 
         {error && (
-          <p className="text-center text-red-400 mt-6">{error}</p>
+          <p className="text-center text-red-400 mt-6 text-sm md:text-base">{error}</p>
         )}
       </div>
     );
@@ -214,25 +214,25 @@ const Compare = () => {
      RESULTS SCREEN
   ======================= */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black text-white px-6 py-14">
-      <h1 className="text-4xl font-semibold text-center mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black text-white px-4 md:px-6 py-10 md:py-14">
+      <h1 className="text-2xl md:text-4xl font-semibold text-center mb-4">
         Compare LeetCode Profiles
       </h1>
 
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-8 md:mb-10">
         <button
           onClick={handleReload}
-          className="px-8 py-2 rounded-xl border border-white/20 text-white hover:bg-white/10 transition text-sm"
+          className="px-6 md:px-8 py-2 rounded-xl border border-white/20 text-white hover:bg-white/10 transition text-sm"
         >
           ← Compare Again
         </button>
       </div>
 
-      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8 mb-12">
-        <div className="grid grid-cols-3 mb-6 font-semibold text-sm">
+      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-4 md:p-8 mb-8 md:mb-12">
+        <div className="grid grid-cols-3 mb-4 md:mb-6 font-semibold text-xs md:text-sm">
           <span>Metric</span>
-          <span className="text-center text-emerald-400">{u1}</span>
-          <span className="text-center text-blue-400">{u2}</span>
+          <span className="text-center text-emerald-400 truncate px-1">{u1}</span>
+          <span className="text-center text-blue-400 truncate px-1">{u2}</span>
         </div>
 
         <StatRow label="Total Solved" v1={user1.totalSolved ?? "--"} v2={user2.totalSolved ?? "--"} />
@@ -240,24 +240,24 @@ const Compare = () => {
         <StatRow label="Medium Solved" v1={user1.mediumSolved ?? "--"} v2={user2.mediumSolved ?? "--"} />
         <StatRow label="Hard Solved" v1={user1.hardSolved ?? "--"} v2={user2.hardSolved ?? "--"} />
         <StatRow
-          label="Submissions (last year)"
+          label="Submissions"
           v1={getTotalSubmissions(user1.submissionCalendar)}
           v2={getTotalSubmissions(user2.submissionCalendar)}
         />
         <StatRow
-          label="Global Percentile"
+          label="Percentile"
           v1={getGlobalPercentile(user1.ranking)}
           v2={getGlobalPercentile(user2.ranking)}
         />
         <StatRow
-          label="Strength Balance (lower = better)"
+          label="Balance Score"
           v1={balance1.toFixed(2)}
           v2={balance2.toFixed(2)}
         />
       </div>
 
-      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8">
-        <h2 className="text-xl font-semibold mb-4">Insights</h2>
+      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-4 md:p-8">
+        <h2 className="text-lg md:text-xl font-semibold mb-4">Insights</h2>
 
         <ul className="space-y-2 mb-6">
           <Insight label="total solved" diff={diffs.solved} name1={u1} name2={u2} />
@@ -272,14 +272,14 @@ const Compare = () => {
         <div className="text-center">
           <button
             onClick={() => setShowConclusion(true)}
-            className="px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition"
+            className="px-6 md:px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm md:text-base"
           >
             Show Conclusion
           </button>
         </div>
 
         {showConclusion && (
-          <p className="text-center text-white/80 italic mt-4 text-lg">
+          <p className="text-center text-white/80 italic mt-4 text-base md:text-lg">
             {verdict}
           </p>
         )}

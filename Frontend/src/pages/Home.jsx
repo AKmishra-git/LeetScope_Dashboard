@@ -40,7 +40,7 @@ const Home = () => {
   }, [username]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black px-6 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-black via-[#0b0f1a] to-black px-3 md:px-6 py-4 md:py-6">
       <Header
         user={user}
         username={username}
@@ -48,13 +48,13 @@ const Home = () => {
       />
 
       {loading && (
-        <p className="text-center text-white/60 mt-6 text-lg">
+        <p className="text-center text-white/60 mt-6 text-base md:text-lg">
           Fetching profile data...
         </p>
       )}
 
       {error && (
-        <p className="text-center text-red-400 mt-6 text-lg">{error}</p>
+        <p className="text-center text-red-400 mt-6 text-base md:text-lg">{error}</p>
       )}
 
       {!loading && (
